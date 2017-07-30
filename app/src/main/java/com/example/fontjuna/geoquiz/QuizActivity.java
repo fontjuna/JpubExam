@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class QuizActivity extends AppCompatActivity {
+public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
 
     static final String TAG = QuizActivity.class.getSimpleName();
 
@@ -29,40 +29,60 @@ public class QuizActivity extends AppCompatActivity {
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
 
-        findViewById(R.id.true_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer(true);
-            }
-        });
-
-        findViewById(R.id.false_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                checkAnswer(false);
-            }
-        });
-
-        findViewById(R.id.next_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextQuestion();
-            }
-        });
-        findViewById(R.id.prev_button).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                prevQuestion();
-            }
-        });
-        findViewById(R.id.question_text_view).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextQuestion();
-            }
-        });
+        findViewById(R.id.true_button).setOnClickListener(this);
+        findViewById(R.id.false_button).setOnClickListener(this);
+        findViewById(R.id.next_button).setOnClickListener(this);
+        findViewById(R.id.prev_button).setOnClickListener(this);
+        findViewById(R.id.question_text_view).setOnClickListener(this);
         updateQuestion();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.question_text_view:
+                nextQuestion();
+                break;
+            case R.id.next_button:
+                nextQuestion();
+                break;
+            case R.id.prev_button:
+                prevQuestion();
+                break;
+            case R.id.false_button:
+                checkAnswer(false);
+                break;
+            case R.id.true_button:
+                checkAnswer(true);
+                break;
+        }
+    }
+
+    private void nextQuestion() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        updateQuestion();
+    }
+
+    private void prevQuestion() {
+        mCurrentIndex = Math.abs(mCurrentIndex - 1) % mQuestionBank.length;
+        updateQuestion();
+    }
+
+    private void updateQuestion() {
+        int question = mQuestionBank[mCurrentIndex].getTextResId();
+        mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+        int messageResId = 0;
+        if (userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_toast;
+        } else {
+            messageResId = R.string.incorrect_toast;
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -95,29 +115,4 @@ public class QuizActivity extends AppCompatActivity {
         Log.d(TAG, "onDestroy() 호출");
     }
 
-    private void nextQuestion() {
-        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-        updateQuestion();
-    }
-
-    private void prevQuestion() {
-        mCurrentIndex = Math.abs(mCurrentIndex - 1) % mQuestionBank.length;
-        updateQuestion();
-    }
-
-    private void updateQuestion() {
-        int question = mQuestionBank[mCurrentIndex].getTextResId();
-        mQuestionTextView.setText(question);
-    }
-
-    private void checkAnswer(boolean userPressedTrue) {
-        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
-        int messageResId = 0;
-        if (userPressedTrue == answerIsTrue) {
-            messageResId = R.string.correct_toast;
-        } else {
-            messageResId = R.string.incorrect_toast;
-        }
-        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
-    }
 }
