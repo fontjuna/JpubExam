@@ -9,7 +9,8 @@ import android.widget.Toast;
 
 public class QuizActivity extends AppCompatActivity implements View.OnClickListener {
 
-    static final String TAG = QuizActivity.class.getSimpleName();
+    private static final String TAG = QuizActivity.class.getSimpleName();
+    private static final String KEY_INDEX = "index";
 
     private TextView mQuestionTextView;
     private Question[] mQuestionBank = new Question[]{
@@ -34,8 +35,18 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.prev_button).setOnClickListener(this);
         findViewById(R.id.question_text_view).setOnClickListener(this);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
         updateQuestion();
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        Log.i(TAG, "onSavedInstanceState");
+        savedInstanceState.putInt(KEY_INDEX, mCurrentIndex);
     }
 
     @Override
