@@ -29,15 +29,15 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_quiz);
 
         mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        if (savedInstanceState != null) {
+            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
+        }
 
         findViewById(R.id.true_button).setOnClickListener(this);
         findViewById(R.id.false_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.prev_button).setOnClickListener(this);
         findViewById(R.id.question_text_view).setOnClickListener(this);
-        if (savedInstanceState != null) {
-            mCurrentIndex = savedInstanceState.getInt(KEY_INDEX, 0);
-        }
         updateQuestion();
 
     }
