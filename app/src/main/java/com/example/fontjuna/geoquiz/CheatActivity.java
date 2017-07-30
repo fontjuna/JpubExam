@@ -11,6 +11,8 @@ public class CheatActivity extends AppCompatActivity implements View.OnClickList
 
     private static final String EXTRA_ANSWER_IS_TRUE =
             "com.example.fontjuna.geoquiz.answer_is_true";
+    private static final String EXTRA_ANSWER_SHOWN =
+            "com.example.fontjuna.geoquiz.answer_shown";
     private boolean mAnswerIsTrue;
     private TextView mAnswerTextView;
 
@@ -30,6 +32,10 @@ public class CheatActivity extends AppCompatActivity implements View.OnClickList
         return intent;
     }
 
+    public static boolean wasAnswerShown(Intent intent) {
+        return intent.getBooleanExtra(EXTRA_ANSWER_SHOWN, false);
+    }
+
     @Override
     public void onClick(View v) {
         if (mAnswerIsTrue) {
@@ -37,5 +43,12 @@ public class CheatActivity extends AppCompatActivity implements View.OnClickList
         } else {
             mAnswerTextView.setText(R.string.false_button);
         }
+        setAnswerShownResult(true);
+    }
+
+    private void setAnswerShownResult(boolean isAnswerShown) {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_ANSWER_SHOWN, isAnswerShown);
+        setResult(RESULT_OK, intent);
     }
 }
