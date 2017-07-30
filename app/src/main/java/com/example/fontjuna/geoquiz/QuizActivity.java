@@ -1,5 +1,6 @@
 package com.example.fontjuna.geoquiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -37,6 +38,7 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.false_button).setOnClickListener(this);
         findViewById(R.id.next_button).setOnClickListener(this);
         findViewById(R.id.prev_button).setOnClickListener(this);
+        findViewById(R.id.cheat_button).setOnClickListener(this);
         findViewById(R.id.question_text_view).setOnClickListener(this);
         updateQuestion();
 
@@ -67,6 +69,10 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.true_button:
                 checkAnswer(true);
                 break;
+            case R.id.cheat_button:
+                Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -76,7 +82,10 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void prevQuestion() {
-        mCurrentIndex = Math.abs(mCurrentIndex - 1) % mQuestionBank.length;
+        mCurrentIndex = (mCurrentIndex - 1) % mQuestionBank.length;
+        if (mCurrentIndex < 0) {
+            mCurrentIndex += mQuestionBank.length;
+        }
         updateQuestion();
     }
 
