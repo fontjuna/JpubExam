@@ -1,10 +1,14 @@
 package com.example.fontjuna.geoquiz;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.widget.TextView;
 
 public class CheatActivity extends AppCompatActivity implements View.OnClickListener {
@@ -37,13 +41,31 @@ public class CheatActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (mAnswerIsTrue) {
             mAnswerTextView.setText(R.string.true_button);
         } else {
             mAnswerTextView.setText(R.string.false_button);
         }
         setAnswerShownResult(true);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            int cx = v.getWidth() / 2;
+            int cy = v.getHeight() / 2;
+            float radius = v.getWidth();
+            Animator animator = ViewAnimationUtils
+                    .createCircularReveal(v, cx, cy, radius, 0);
+            animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    v.setVisibility(View.INVISIBLE);
+                }
+            });
+            animator.start();
+        } else {
+            v.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setAnswerShownResult(boolean isAnswerShown) {
