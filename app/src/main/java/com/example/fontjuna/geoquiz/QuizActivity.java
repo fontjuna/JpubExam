@@ -70,7 +70,9 @@ public class QuizActivity extends AppCompatActivity implements View.OnClickListe
                 checkAnswer(true);
                 break;
             case R.id.cheat_button:
-                Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
+//                Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
+                boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
                 startActivity(intent);
                 break;
         }
